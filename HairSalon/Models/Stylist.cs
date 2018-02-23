@@ -34,13 +34,13 @@ namespace HairSalon.Models
       return _id;
     }
 
-    public static List<Stylist> GetAllStylist()
+    public static List<Stylist> GetAll()
         {
             List<Stylist> allStylist = new List<Stylist> {};
             MySqlConnection conn = DB.Connection();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"SELECT FROM Stylist;";
+            cmd.CommandText = @"SELECT * FROM Stylist;";
             MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
             while(rdr.Read())
             {
@@ -57,5 +57,78 @@ namespace HairSalon.Models
             }
             return allStylist;
         }
+
+        public static void DeleteAll()
+         {
+             MySqlConnection conn = DB.Connection();
+             conn.Open();
+
+             var cmd = conn.CreateCommand() as MySqlCommand;
+             cmd.CommandText = @"DELETE FROM Stylist;";
+
+             cmd.ExecuteNonQuery();
+
+             conn.Close();
+             if (conn != null)
+             {
+                 conn.Dispose();
+             }
+        }
+
+        public void Save()
+           {
+             MySqlConnection conn = DB.Connection();
+             conn.Open();
+
+             var cmd = conn.CreateCommand() as MySqlCommand;
+             cmd.CommandText = @"INSERT INTO `stylist` (`first_name, first_lastName`) VALUES (@firstName, @lastName);";
+
+             MySqlParameter name = new MySqlParameter();
+             name.ParameterName = "@firstName";
+             name.Value = this._name;
+             cmd.Parameters.Add(name);
+
+             MySqlParameter lastName = new MySqlParameter();
+             lastName.ParameterName = "@lastName";
+             lastName.Value = this._lastName;
+             cmd.Parameters.Add(lastName);
+
+             cmd.ExecuteNonQuery();
+             _id = (int) cmd.LastInsertedId;
+
+              conn.Close();
+              if (conn != null)
+              {
+                  conn.Dispose();
+              }
+         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+      //
+      // public override bool Equals(System.Object otherItem)
+      // {
+      //     if (!(otherItem is Item))
+      //     {
+      //       return false;
+      //     }
+      //     else
+      //     {
+      //       Item newItem = (Item) otherItem;
+      //       bool idEquality = (this.GetId() == newItem.GetId());
+      //       bool descriptionEquality = (this.GetDescription() == newItem.GetDescription());
+      //       return (idEquality && descriptionEquality);
+      //   }
+
   }
 }

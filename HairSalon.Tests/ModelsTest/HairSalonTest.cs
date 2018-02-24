@@ -27,7 +27,7 @@ namespace HairSalon.Models.Tests
           string lastName = "smith";
           int Id = 1;
 
-          string nameresult = newStylist.GetName();
+          string nameresult = newStylist.GetFirstName();
           string lastnameresult = newStylist.GetLastName();
           int Idresult = newStylist.GetId();
 
@@ -48,22 +48,31 @@ namespace HairSalon.Models.Tests
           Assert.AreEqual(0, result);
         }
 
+        [TestMethod]
+        public void Equals_ReturnsTrueIfDescriptionsAreTheSame_Item()
+        {
+          // Arrange, Act
+          Stylist firstStylist = new Stylist("cynthia", "smith");
+          Stylist secondStylist = new Stylist("cynthia", "smith");
+
+          // Assert
+          Assert.AreEqual(firstStylist, secondStylist);
+        }
+
 
         [TestMethod]
-        public void Save_AssignsIdToObject_Id()
+        public void Save_SavesToDatabase_ItemList()
         {
           //Arrange
-          Stylist newStylist = new Stylist("cynthia", "smith");
+          Stylist testStylist = new Stylist("cynthia", "Smith");
 
           //Act
-          newStylist.Save();
-          Stylist savedStylist = Stylist.GetAll()[0];
-
-          int result = savedStylist.GetId();
-          int testId = newStylist.GetId();
+          testStylist.Save();
+          List<Stylist> result = Stylist.GetAll();
+          List<Stylist> testList = new List<Stylist>{testStylist};
 
           //Assert
-          Assert.AreEqual(testId, result);
+          CollectionAssert.AreEqual(testList, result);
         }
 
 
@@ -72,17 +81,7 @@ namespace HairSalon.Models.Tests
 
 
 
-      //
-      // [TestMethod]
-      // public void Equals_ReturnsTrueIfDescriptionsAreTheSame_Item()
-      // {
-      //   // Arrange, Act
-      //   Item firstItem = new Item("Mow the lawn");
-      //   Item secondItem = new Item("Mow the lawn");
-      //
-      //   // Assert
-      //   Assert.AreEqual(firstItem, secondItem);
-      // }
+
 
 
   }

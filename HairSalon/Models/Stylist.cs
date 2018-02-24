@@ -8,20 +8,20 @@ namespace HairSalon.Models
 {
   public class Stylist
   {
-    private string _name;
+    private string _firstName;
     private string _lastName;
     private int _id;
 
-    public Stylist(string name, string lastName, int Id = 0)
+    public Stylist(string firstName, string lastName, int Id = 0)
     {
-      _name = name;
+      _firstName = firstName;
       _lastName = lastName;
       _id = Id;
     }
 
-    public string GetName()
+    public string GetFirstName()
     {
-      return _name;
+      return _firstName;
     }
 
     public string GetLastName()
@@ -75,22 +75,42 @@ namespace HairSalon.Models
              }
         }
 
+        //
+        public override bool Equals(System.Object otherStylist)
+        {
+            if (!(otherStylist is Stylist))
+            {
+              return false;
+            }
+            else
+            {
+              Stylist newStylist = (Stylist) otherStylist;
+              bool idEquality = (this.GetId() == newStylist.GetId());
+              bool nameEquality = (this.GetFirstName() == newStylist.GetFirstName());
+              bool lastNameEquality = (this.GetLastName() == newStylist.GetLastName());
+              return (idEquality && nameEquality && lastNameEquality);
+            }
+        }
+
+
         public void Save()
            {
              MySqlConnection conn = DB.Connection();
              conn.Open();
 
              var cmd = conn.CreateCommand() as MySqlCommand;
-             cmd.CommandText = @"INSERT INTO `stylist` (`first_name, first_lastName`) VALUES (@firstName, @lastName);";
+             cmd.CommandText = @"INSERT INTO `stylists` (`firts_name, last_Name`) VALUES (@FirstName, @LastName);";
 
              MySqlParameter name = new MySqlParameter();
-             name.ParameterName = "@firstName";
-             name.Value = this._name;
-             cmd.Parameters.Add(name);
+             name.ParameterName = "@FirstName";
+             name.Value = this._firstName;
+
 
              MySqlParameter lastName = new MySqlParameter();
-             lastName.ParameterName = "@lastName";
+             lastName.ParameterName = "@LastName";
              lastName.Value = this._lastName;
+
+             cmd.Parameters.Add(name);
              cmd.Parameters.Add(lastName);
 
              cmd.ExecuteNonQuery();
@@ -99,36 +119,12 @@ namespace HairSalon.Models
               conn.Close();
               if (conn != null)
               {
-                  conn.Dispose();
+                conn.Dispose();
               }
-         }
+        }
 
 
 
-
-
-
-
-
-
-
-
-
-
-      //
-      // public override bool Equals(System.Object otherItem)
-      // {
-      //     if (!(otherItem is Item))
-      //     {
-      //       return false;
-      //     }
-      //     else
-      //     {
-      //       Item newItem = (Item) otherItem;
-      //       bool idEquality = (this.GetId() == newItem.GetId());
-      //       bool descriptionEquality = (this.GetDescription() == newItem.GetDescription());
-      //       return (idEquality && descriptionEquality);
-      //   }
 
   }
 }

@@ -109,13 +109,5 @@ namespace HairSalon.Models.Tests
             //Assert
             Assert.AreEqual(testStylist, foundStylist);
           }
-
-
-
-
-
-
-
-
   }
 }

@@ -16,7 +16,7 @@ namespace HairSalon.Models.Tests
         public void Dispose()
         {
           // Item.DeleteAll();
-          // Client.DeleteAll();
+          Client.DeleteAll();
         }
 
        [TestMethod]
@@ -52,13 +52,13 @@ namespace HairSalon.Models.Tests
       }
 
       [TestMethod]
-      public void SaveClients_SavesClientToDatabase_ClientList()
+      public void SaveClients_SavesToDatabase()
       {
         //Arrange
-        Client testClient = new Client("samantha", "smith", 503753, 0);
-        testClient.SaveClients();
+        Client testClient = new Client("cynthia", "Smith", 503753);
 
         //Act
+        testClient.SaveClients();
         List<Client> result = Client.GetAllClients();
         List<Client> testList = new List<Client>{testClient};
 
@@ -66,38 +66,37 @@ namespace HairSalon.Models.Tests
         CollectionAssert.AreEqual(testList, result);
       }
 
-//
-//      [TestMethod]
-//      public void SaveClients_DatabaseAssignsIdToClient_Id()
-//      {
-//        //Arrange
-//        Client testClient = new Client("sam", "smith", 503753);
-//        testClient.SaveClients();
-//
-//        //Act
-//        Client savedClient = Client.GetAllClients()[0];
-//
-//        int result = savedClient.GetId();
-//        int testId = testClient.GetId();
-//
-//        //Assert
-//        Assert.AreEqual(testId, result);
-//     }
+     [TestMethod]
+     public void SaveClients_DatabaseAssignsIdToClient_Id()
+     {
+       //Arrange
+       Client testClient = new Client("sam", "smith", 503753);
+       testClient.SaveClients();
+
+       //Act
+       Client savedClient = Client.GetAllClients()[0];
+
+       int result = savedClient.GetId();
+       int testId = testClient.GetId();
+
+       //Assert
+       Assert.AreEqual(testId, result);
+    }
 // //
 //
-//     [TestMethod]
-//     public void Find_FindsClientInDatabase_Client()
-//     {
-//       //Arrange
-//       Client testClient = new Client("Household chores");
-//       testClient.Save();
-//
-//       //Act
-//       Client foundClient = Client.Find(testClient.GetId());
-//
-//       //Assert
-//       Assert.AreEqual(testClient, foundClient);
-//     }
+    [TestMethod]
+    public void Find_FindsClientInDatabase_Client()
+    {
+      //Arrange
+      Client testClient = new Client("samantha", "smith", 503753, 1);
+      testClient.SaveClients();
+
+      //Act
+      Client foundClient = Client.Find(testClient.GetId());
+
+      //Assert
+      Assert.AreEqual(testClient, foundClient);
+    }
 //
 //     [TestMethod]
 //     public void GetItems_RetrievesAllItemsWithClient_ItemList()

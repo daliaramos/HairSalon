@@ -109,6 +109,7 @@ namespace HairSalon.Models
               string ClientLastName = rdr.GetString(1);
               int ClientPhoneNumber = rdr.GetInt32(2);
               int ClientId = rdr.GetInt32(3);
+
               Client newClient = new Client(ClientName, ClientLastName, ClientPhoneNumber, ClientId);
               allClients.Add(newClient);
             }
@@ -119,82 +120,84 @@ namespace HairSalon.Models
             }
             return allClients;
         }
-        // public static Client Find(int id)
-        // {
-        //     MySqlConnection conn = DB.Connection();
-        //     conn.Open();
-        //     var cmd = conn.CreateCommand() as MySqlCommand;
-        //     cmd.CommandText = @"SELECT * FROM Clients WHERE id = (@searchId);";
-        //
-        //     MySqlParameter searchId = new MySqlParameter();
-        //     searchId.ParameterName = "@searchId";
-        //     searchId.Value = id;
-        //     cmd.Parameters.Add(searchId);
-        //
-        //     var rdr = cmd.ExecuteReader() as MySqlDataReader;
-        //     int ClientId = 0;
-        //     string ClientName = "";
-        //     string ClientLastName = "";
-        //     int ClientPhoneNumber = 0;
-        //
-        //     while(rdr.Read())
-        //     {
-        //       ClientId = rdr.GetInt32(0);
-        //       ClientName = rdr.GetString(1);
-        //       ClientLastName = rdr.GetString(2);
-        //       ClientPhoneNumber = rdr.GetInt32(3);
-        //     }
-        //     Client newClient = new Client(ClientName, ClientLastName, ClientPhoneNumber, ClientId);
-        //     conn.Close();
-        //     if (conn != null)
-        //     {
-        //         conn.Dispose();
-        //     }
-        //     return newClient;
-        // }
-        // public static void DeleteAll()
-        // {
-        //     MySqlConnection conn = DB.Connection();
-        //     conn.Open();
-        //     var cmd = conn.CreateCommand() as MySqlCommand;
-        //     cmd.CommandText = @"DELETE FROM Clients;";
-        //     cmd.ExecuteNonQuery();
-        //     conn.Close();
-        //     if (conn != null)
-        //     {
-        //         conn.Dispose();
-        //     }
-        // }
+        public static Client Find(int id)
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            var cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"SELECT * FROM Clients WHERE id = (@searchId);";
 
-        // public List<Item> GetItems()
-        // {
-        //     List<Item> allCategoryItems = new List<Item> {};
-        //     MySqlConnection conn = DB.Connection();
-        //     conn.Open();
-        //     var cmd = conn.CreateCommand() as MySqlCommand;
-        //     cmd.CommandText = @"SELECT * FROM items WHERE category_id = @category_id;";
-        //
-        //     MySqlParameter categoryId = new MySqlParameter();
-        //     categoryId.ParameterName = "@category_id";
-        //     categoryId.Value = this._id;
-        //     cmd.Parameters.Add(categoryId);
-        //
-        //
-        //     var rdr = cmd.ExecuteReader() as MySqlDataReader;
-        //     while(rdr.Read())
-        //     {
-        //       int itemId = rdr.GetInt32(0);
-        //       string itemDescription = rdr.GetString(1);
-        //       int itemCategoryId = rdr.GetInt32(2);
-        //       Item newItem = new Item(itemDescription, itemCategoryId, itemId);
-        //       allCategoryItems.Add(newItem);
-        //     }
-        //     conn.Close();
-        //     if (conn != null)
-        //     {
-        //         conn.Dispose();
-        //     }
-        //     return allCategoryItems;
-        // }
+            MySqlParameter searchId = new MySqlParameter();
+            searchId.ParameterName = "@searchId";
+            searchId.Value = id;
+            cmd.Parameters.Add(searchId);
+
+            var rdr = cmd.ExecuteReader() as MySqlDataReader;
+
+            string ClientName = "";
+            string ClientLastName = "";
+            int ClientPhoneNumber = 0;
+            int ClientId = 0;
+
+            while(rdr.Read())
+            {
+              ClientName = rdr.GetString(0);
+              ClientLastName = rdr.GetString(1);
+              ClientPhoneNumber = rdr.GetInt32(2);
+              ClientId = rdr.GetInt32(3);
+            }
+            Client newClient = new Client(ClientName, ClientLastName, ClientPhoneNumber, ClientId);
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+            return newClient;
+        }
+
+        public static void DeleteAll()
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            var cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"DELETE FROM Clients;";
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+        }
+
+        public List<Item> GetItems()
+        {
+            List<Item> allCategoryItems = new List<Item> {};
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            var cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"SELECT * FROM items WHERE category_id = @category_id;";
+
+            MySqlParameter categoryId = new MySqlParameter();
+            categoryId.ParameterName = "@category_id";
+            categoryId.Value = this._id;
+            cmd.Parameters.Add(categoryId);
+
+
+            var rdr = cmd.ExecuteReader() as MySqlDataReader;
+            while(rdr.Read())
+            {
+              int itemId = rdr.GetInt32(0);
+              string itemDescription = rdr.GetString(1);
+              int itemCategoryId = rdr.GetInt32(2);
+              Item newItem = new Item(itemDescription, itemCategoryId, itemId);
+              allCategoryItems.Add(newItem);
+            }
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+            return allCategoryItems;
+        }
     }
 }

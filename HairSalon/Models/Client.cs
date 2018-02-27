@@ -169,13 +169,13 @@ namespace HairSalon.Models
             }
         }
 
-        public List<Item> GetItems()
+        public List<Stylist> GetStylists()
         {
-            List<Item> allCategoryItems = new List<Item> {};
+            List<Stylist> allCategoryStylists = new List<Stylist> {};
             MySqlConnection conn = DB.Connection();
             conn.Open();
             var cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"SELECT * FROM items WHERE category_id = @category_id;";
+            cmd.CommandText = @"SELECT * FROM Stylists WHERE category_id = @category_id;";
 
             MySqlParameter categoryId = new MySqlParameter();
             categoryId.ParameterName = "@category_id";
@@ -186,18 +186,18 @@ namespace HairSalon.Models
             var rdr = cmd.ExecuteReader() as MySqlDataReader;
             while(rdr.Read())
             {
-              int itemId = rdr.GetInt32(0);
-              string itemDescription = rdr.GetString(1);
-              int itemCategoryId = rdr.GetInt32(2);
-              Item newItem = new Item(itemDescription, itemCategoryId, itemId);
-              allCategoryItems.Add(newItem);
+              int StylistId = rdr.GetInt32(0);
+              string StylistDescription = rdr.GetString(1);
+              int StylistCategoryId = rdr.GetInt32(2);
+              Stylist newStylist = new Stylist(StylistDescription, StylistCategoryId, StylistId);
+              allCategoryStylists.Add(newStylist);
             }
             conn.Close();
             if (conn != null)
             {
                 conn.Dispose();
             }
-            return allCategoryItems;
+            return allCategoryStylists;
         }
     }
 }

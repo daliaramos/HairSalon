@@ -40,7 +40,7 @@ namespace HairSalon.Models
             MySqlConnection conn = DB.Connection();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"SELECT * FROM Stylist;";
+            cmd.CommandText = @"SELECT * FROM Stylists;";
             MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
             while(rdr.Read())
             {
@@ -64,7 +64,7 @@ namespace HairSalon.Models
              conn.Open();
 
              var cmd = conn.CreateCommand() as MySqlCommand;
-             cmd.CommandText = @"DELETE FROM Stylist;";
+             cmd.CommandText = @"DELETE FROM Stylists;";
 
              cmd.ExecuteNonQuery();
 
@@ -99,15 +99,15 @@ namespace HairSalon.Models
              conn.Open();
 
              var cmd = conn.CreateCommand() as MySqlCommand;
-             cmd.CommandText = @"INSERT INTO `stylists` (`firts_name, last_Name`) VALUES (@FirstName, @LastName);";
+             cmd.CommandText = @"INSERT INTO `Stylists` (first_name, last_name) VALUES (@StylistFirstName, @StylistLastName);";
 
              MySqlParameter name = new MySqlParameter();
-             name.ParameterName = "@FirstName";
+             name.ParameterName = "@StylistFirstName";
              name.Value = this._firstName;
 
 
              MySqlParameter lastName = new MySqlParameter();
-             lastName.ParameterName = "@LastName";
+             lastName.ParameterName = "@StylistLastName";
              lastName.Value = this._lastName;
 
              cmd.Parameters.Add(name);
@@ -121,6 +121,44 @@ namespace HairSalon.Models
               {
                 conn.Dispose();
               }
+        }
+
+        public static Stylist Find(int id)
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            var cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"SELECT * FROM `Stylists` WHERE id = @thisId;";
+
+            MySqlParameter thisId = new MySqlParameter();
+            thisId.ParameterName = "@thisId";
+            thisId.Value = id;
+            cmd.Parameters.Add(thisId);
+
+            var rdr = cmd.ExecuteReader() as MySqlDataReader;
+
+            string stylistFirstName = "";
+            string stylistLastName = "";
+            int stylistid = 0;
+
+            while (rdr.Read())
+            {
+                stylistFirstName = rdr.GetString(0);
+                stylistLastName = rdr.GetString(1);
+                stylistid = rdr.GetInt32(2);
+            }
+
+            Stylist foundStylist= new Stylist(stylistFirstName, stylistLastName, stylistid);  // This line is new!
+
+             conn.Close();
+             if (conn != null)
+             {
+                 conn.Dispose();
+             }
+
+            return foundStylist;  // This line is new!
+
         }
 
 

@@ -15,7 +15,7 @@ namespace HairSalon.Models.Tests
 
         public StylistTests()
         {
-            DBConfiguration.ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=HairSalon;";
+            DBConfiguration.ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=hairsalon;";
         }
 
 
@@ -49,7 +49,7 @@ namespace HairSalon.Models.Tests
         }
 
         [TestMethod]
-        public void Equals_ReturnsTrueIfDescriptionsAreTheSame_Item()
+        public void Equals_ReturnsTrueIfStylistAreTheSame_Stylist()
         {
           // Arrange, Act
           Stylist firstStylist = new Stylist("cynthia", "smith");
@@ -61,7 +61,7 @@ namespace HairSalon.Models.Tests
 
 
         [TestMethod]
-        public void Save_SavesToDatabase_ItemList()
+        public void Save_SavesToDatabase_Stylist()
         {
           //Arrange
           Stylist testStylist = new Stylist("cynthia", "Smith");
@@ -75,7 +75,19 @@ namespace HairSalon.Models.Tests
           CollectionAssert.AreEqual(testList, result);
         }
 
+        [TestMethod]
+        public void Find_FindsStylistInDatabase_Item()
+        {
+          //Arrange
+          Stylist testStylist = new Stylist("Cynthia", "smith");
+          testStylist.Save();
 
+          //Act
+          Stylist foundStylist = Stylist.Find(testStylist.GetId());
+
+          //Assert
+          Assert.AreEqual(testStylist, foundStylist);
+        }
 
 
 

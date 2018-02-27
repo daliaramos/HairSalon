@@ -8,32 +8,36 @@ namespace HairSalon.Models.Tests
   [TestClass]
   public class StylistTests : IDisposable
     {
-        public void Dispose()
-        {
-            Stylist.DeleteAll();
-        }
-
         public StylistTests()
         {
             DBConfiguration.ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=hairsalon;";
+        }
+
+        public void Dispose()
+        {
+            Stylist.DeleteAll();
+            // Client.DeleteAll();
         }
 
 
         [TestMethod]
         public void Getters_JustATest()
         {
-          Stylist newStylist = new Stylist("cynthia", "smith", 1);
+          Stylist newStylist = new Stylist("cynthia", "smith", 1, 1);
           string name = "cynthia";
           string lastName = "smith";
           int Id = 1;
+          int Client = 1;
 
           string nameresult = newStylist.GetFirstName();
           string lastnameresult = newStylist.GetLastName();
           int Idresult = newStylist.GetId();
+          int ClientResult = newStylist.GetClient();
 
           Assert.AreEqual(name, nameresult);
           Assert.AreEqual(lastName, lastnameresult);
           Assert.AreEqual(Id, Idresult);
+          Assert.AreEqual(Client, ClientResult);
         }
 
         [TestMethod]
@@ -52,8 +56,8 @@ namespace HairSalon.Models.Tests
         public void Equals_ReturnsTrueIfStylistAreTheSame_Stylist()
         {
           // Arrange, Act
-          Stylist firstStylist = new Stylist("cynthia", "smith");
-          Stylist secondStylist = new Stylist("cynthia", "smith");
+          Stylist firstStylist = new Stylist("cynthia", "smith", 1);
+          Stylist secondStylist = new Stylist("cynthia", "smith", 1);
 
           // Assert
           Assert.AreEqual(firstStylist, secondStylist);
@@ -64,7 +68,7 @@ namespace HairSalon.Models.Tests
         public void Save_SavesToDatabase_Stylist()
         {
           //Arrange
-          Stylist testStylist = new Stylist("cynthia", "Smith");
+          Stylist testStylist = new Stylist("cynthia", "Smith", 1);
 
           //Act
           testStylist.Save();
@@ -76,18 +80,35 @@ namespace HairSalon.Models.Tests
         }
 
         [TestMethod]
-        public void Find_FindsStylistInDatabase_Item()
+        public void Save_DatabaseAssignsIdToObject_Id()
         {
           //Arrange
-          Stylist testStylist = new Stylist("Cynthia", "smith");
+          Stylist testStylist = new Stylist("cynthia","smith", 1);
           testStylist.Save();
 
           //Act
-          Stylist foundStylist = Stylist.Find(testStylist.GetId());
+          Stylist savedStylist = Stylist.GetAll()[0];
+
+          int result = savedStylist.GetId();
+          int testId = testStylist.GetId();
 
           //Assert
-          Assert.AreEqual(testStylist, foundStylist);
+          Assert.AreEqual(testId, result);
         }
+
+          [TestMethod]
+          public void Find_FindsStylistInDatabase_Item()
+          {
+            //Arrange
+            Stylist testStylist = new Stylist("Cynthia", "smith", 1);
+            testStylist.Save();
+
+            //Act
+            Stylist foundStylist = Stylist.Find(testStylist.GetId());
+
+            //Assert
+            Assert.AreEqual(testStylist, foundStylist);
+          }
 
 
 

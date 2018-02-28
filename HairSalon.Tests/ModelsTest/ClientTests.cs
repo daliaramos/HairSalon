@@ -10,13 +10,13 @@ namespace HairSalon.Models.Tests
   {
         public ClientTests()
         {
-            DBConfiguration.ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=hairsalon;";
+            DBConfiguration.ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=hairsalon_test;";
         }
 
         public void Dispose()
         {
-          // Item.DeleteAll();
           Client.DeleteAll();
+          Stylist.DeleteAll();
         }
 
        [TestMethod]
@@ -98,24 +98,24 @@ namespace HairSalon.Models.Tests
       Assert.AreEqual(testClient, foundClient);
     }
 //
-//     [TestMethod]
-//     public void GetItems_RetrievesAllItemsWithClient_ItemList()
-//     {
-//       Client testClient = new Client("Household chores");
-//       testClient.Save();
-//
-//       Item firstItem = new Item("Mow the lawn", testClient.GetId());
-//       firstItem.Save();
-//       Item secondItem = new Item("Do the dishes", testClient.GetId());
-//       secondItem.Save();
-//
-//
-//       List<Item> testItemList = new List<Item> {firstItem, secondItem};
-//       List<Item> resultItemList = testClient.GetItems();
-//
-//       CollectionAssert.AreEqual(testItemList, resultItemList);
-// }
-
-
+    // [TestMethod]
+    // public void GetStylists_RetrievesAllStylistsWithClient_StylistList()
+    // {
+    //   Client testClient = new Client("sam", "sam", 503);
+    //   testClient.SaveClients();
+    //   Console.WriteLine(testClient.GetId());
+    //   Stylist firstStylist = new Stylist("sam", "sam", testClient.GetId());
+    //   firstStylist.Save();
+    //   Stylist secondStylist = new Stylist("dan", "dan", testClient.GetId());
+    //   secondStylist.Save();
+    //
+    //
+    //   List<Stylist> testStylistList = new List<Stylist> {firstStylist, secondStylist};
+    //   List<Stylist> resultStylistList = testClient.GetStylists();
+    //   // Console.WriteLine("hi" + resultStylistList[0]);
+    //   // Console.WriteLine("hi1" + resultStylistList[1]);
+    //
+    //   CollectionAssert.AreEqual(testStylistList, resultStylistList);
+    // }
   }
 }

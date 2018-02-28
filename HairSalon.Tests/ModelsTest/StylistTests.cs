@@ -6,17 +6,18 @@ using System;
 namespace HairSalon.Models.Tests
 {
   [TestClass]
-  public class StylistTests : IDisposable
+  public class StylistTests
+  : IDisposable
     {
         public StylistTests()
         {
-            DBConfiguration.ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=hairsalon;";
+            DBConfiguration.ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=hairsalon_test;";
         }
 
         public void Dispose()
         {
             Stylist.DeleteAll();
-            // Client.DeleteAll();
+            Client.DeleteAll();
         }
 
 

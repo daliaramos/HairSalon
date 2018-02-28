@@ -155,6 +155,7 @@ namespace HairSalon.Models
             return newClient;
         }
 
+
         public static void DeleteAll()
         {
             MySqlConnection conn = DB.Connection();
@@ -167,37 +168,38 @@ namespace HairSalon.Models
             {
                 conn.Dispose();
             }
+
+
         }
 
         public List<Stylist> GetStylists()
         {
-            List<Stylist> allCategoryStylists = new List<Stylist> {};
+            List<Stylist> allClientStylist = new List<Stylist> {};
             MySqlConnection conn = DB.Connection();
             conn.Open();
             var cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"SELECT * FROM Stylists WHERE category_id = @category_id;";
+            cmd.CommandText = @"SELECT * FROM stylists WHERE client_id = @Client_id;";
 
-            MySqlParameter categoryId = new MySqlParameter();
-            categoryId.ParameterName = "@category_id";
-            categoryId.Value = this._id;
-            cmd.Parameters.Add(categoryId);
-
+            MySqlParameter clientId = new MySqlParameter();
+            clientId.ParameterName = "@Client_id";
+            clientId.Value = this._id;
+            cmd.Parameters.Add(clientId);
 
             var rdr = cmd.ExecuteReader() as MySqlDataReader;
             while(rdr.Read())
             {
-              int StylistId = rdr.GetInt32(0);
-              string StylistDescription = rdr.GetString(1);
-              int StylistCategoryId = rdr.GetInt32(2);
-              Stylist newStylist = new Stylist(StylistDescription, StylistCategoryId, StylistId);
-              allCategoryStylists.Add(newStylist);
+              string StylistFirstName = rdr.GetString(0);
+              string StylistLastName = rdr.GetString(1);
+              int StylistId = rdr.GetInt32(2);
+              Stylist newStylist = new Stylist(StylistFirstName, StylistLastName, StylistId);
+              allClientStylist.Add(newStylist);
             }
             conn.Close();
             if (conn != null)
             {
                 conn.Dispose();
             }
-            return allCategoryStylists;
+            return allClientStylist;
         }
     }
 }

@@ -1,14 +1,39 @@
 using Microsoft.AspNetCore.Mvc;
+using HairSalon.Models;
+using System.Collections.Generic;
+using System;
 
 namespace HairSalon.Controllers
 {
-  public class HomeController : Controller
+  public class StylistController : Controller
   {
-
-    [Route("/")]
-    public ActionResult Form()
+    [HttpGet("/")]
+    public ActionResult Index()
     {
-      return View("Index", "This is a message from the controller");
+        List<Stylist> allStylists = Stylist.GetAll();
+        return View("Index", allStylists);
     }
+
+    [HttpGet("/Stylists/new")]
+      public ActionResult CreateForm()
+      {
+          return View();
+      }
+
+      [HttpPost("/Stylists")]
+      public ActionResult Create()
+      {
+          Stylist newStylist = new Stylist(Request.Form["StylistFirstName"], Request.Form["StylistLastName"]);
+          List<Stylist> allStylists = Stylist.GetAll();
+
+          return View("Index", allStylists);
+      }
+
+      // [HttpGet("/Stylists/{id}")]
+      // public ActionResult Details(int id)
+      // {
+      //    Stylist Stylist = Stylist.Find(id);
+      //    return View(Stylist);
+      // }
   }
 }

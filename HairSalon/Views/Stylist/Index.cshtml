@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>Title</title>
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='~/css/styles.css'>
+
+  </head>
+  <body>
+    <div class="container">
+
+
+      <h1>Stylist Names:</h1>
+      <ul>
+        @foreach (var Stylist in Model)
+        {
+          <li><a href='/Stylists/@Stylist.GetId()'>@Stylist.GetFirstName() @Stylist.GetLastName()</a></li>
+        }
+      </ul>
+      <a href='/Stylists/new'>Add new Stylist</a>
+      <br>
+      <br>
+      <form action="/Stylists/list/clear" method="post">
+        <button type="submit" name="button">Clear All Stylists</button>
+      </form>
+    </div>
+  </body>
+</html>

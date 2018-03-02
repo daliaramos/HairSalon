@@ -24,11 +24,11 @@ namespace HairSalon.Tests
         {
             //arrange
             Client newClient = new Client("cynthia", "Rodriguez", "503", 1, 1);
-            string controlFirst = "cynthia";
-            string controlLast = "Rodriguez";
-            string controlPhone = "503";
-            int controlId = 1;
-            int controlStylistId = 1;
+            string clientFirst = "cynthia";
+            string clientLast = "Rodriguez";
+            string clientPhone = "503";
+            int clientId = 1;
+            int clientStylistId = 1;
 
             //act
             string resultFirst = newClient.GetFirstName();
@@ -38,11 +38,11 @@ namespace HairSalon.Tests
             int resultStylistId = newClient.GetStylistId();
 
             //assert
-            Assert.AreEqual(controlFirst, resultFirst);
-            Assert.AreEqual(controlLast, resultLast);
-            Assert.AreEqual(controlPhone, resultPhone);
-            Assert.AreEqual(controlId, resultId);
-            Assert.AreEqual(controlStylistId, resultStylistId);
+            Assert.AreEqual(clientFirst, resultFirst);
+            Assert.AreEqual(clientLast, resultLast);
+            Assert.AreEqual(clientPhone, resultPhone);
+            Assert.AreEqual(clientId, resultId);
+            Assert.AreEqual(clientStylistId, resultStylistId);
         }
 
         [TestMethod]
@@ -116,14 +116,14 @@ namespace HairSalon.Tests
         public void Find_FindAClient_Client()
         {
             //arrange
-            Client controlClient = new Client("cynthia", "Rodriguez", "503");
-            controlClient.Save();
+            Client findClient = new Client("cynthia", "Rodriguez", "503");
+            findClient.Save();
 
             //act
-            Client foundClient = Client.Find(controlClient.GetId());
+            Client foundClient = Client.Find(findClient.GetId());
 
             //Assert
-            Assert.AreEqual(foundClient, controlClient);
+            Assert.AreEqual(foundClient, findClient);
         }
     }
 }

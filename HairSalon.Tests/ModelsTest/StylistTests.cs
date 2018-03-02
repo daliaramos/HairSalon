@@ -24,9 +24,9 @@ namespace HairSalon.Tests
         {
             //arrange
             Stylist newStylist = new Stylist("cynthia", "Rodriguez", 1);
-            string controlFirst = "cynthia";
-            string controlLast = "Rodriguez";
-            int controlId = 1;
+            string stylistFirst = "cynthia";
+            string stylistLast = "Rodriguez";
+            int stylistId = 1;
 
 
             //act
@@ -36,9 +36,9 @@ namespace HairSalon.Tests
 
 
             //assert
-            Assert.AreEqual(controlFirst, resultFirst);
-            Assert.AreEqual(controlLast, resultLast);
-            Assert.AreEqual(controlId, resultId);
+            Assert.AreEqual(stylistFirst, resultFirst);
+            Assert.AreEqual(stylistLast, resultLast);
+            Assert.AreEqual(stylistId, resultId);
 
         }
 

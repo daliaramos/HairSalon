@@ -1,0 +1,23 @@
+@{
+  Layout = "_Layout";
+}
+
+<h2>Add Client for @Model.GetFirstName()</h2>
+
+<form method="post" action="/stylists/@Model.GetId()/clients">
+    <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" name="firstName" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" name="lastName" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input type="text" name="phoneNumber" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-default">Add Client</button>
+</form>
+
+<p class="nav"><a href="/stylists/details/@Model.GetId()">Return to Stylist</a></p>

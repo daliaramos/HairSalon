@@ -1,0 +1,18 @@
+@{
+  Layout = "_Layout";
+}
+
+
+<h2>Stylists</h2>
+
+
+    <a href="/stylists/new">Add new stylist</a>
+<br>
+
+
+        @foreach(var stylist in Model)
+        {
+
+                <h4>Name: @stylist.GetFirstName() @stylist.GetLastName()</h4>
+                <h4>Details: <a href="/stylists/@stylist.GetId()">Details</a></h4>
+        }

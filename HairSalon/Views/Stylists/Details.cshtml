@@ -1,0 +1,19 @@
+@{
+  Layout = "_Layout";
+}
+
+
+<h2>Details for @Model["stylist"].GetFirstName() @Model["stylist"].GetLastName()</h2>
+
+
+    <a href='/stylists/@Model["stylist"].GetId()/clients/new'>Add new client</a>
+
+
+        @foreach(var client in Model["clients"])
+        {
+
+                <h4>@client.GetFirstName() @client.GetLastName()</h4>
+                <h4>@client.GetPhoneNumber()</h4>
+        }
+
+<p><a href="/">Return Home</a></p>

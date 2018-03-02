@@ -1,183 +1,195 @@
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
-using HairSalon;
+using System.Collections.Generic;
 using System;
 
 namespace HairSalon.Models
 {
-  public class Stylist
-  {
-    private string _firstName;
-    private string _lastName;
-    private int _id;
-    private int _client;
-
-    public Stylist(string firstName, string lastName, int client = 0, int Id = 0)
+    public class Stylist
     {
-      _firstName = firstName;
-      _lastName = lastName;
-      _client = client;
-      _id = Id;
+        private string _firstName;
+        private string _lastName;
+        private int _id;
+
+
+        public Stylist(string firstName, string lastName, int Id = 0)
+        {
+            _firstName = firstName;
+            _lastName = lastName;
+            _id = Id;
+        }
+
+    public string GetFirstName()
+     {
+       return _firstName;
+     }
+
+    public string GetLastName()
+     {
+       return _lastName;
+     }
+
+    public int GetId()
+     {
+       return _id;
+     }
+
+
+    public static List<Stylist> GetAllStylists()
+    {
+        List<Stylist> allStylists = new List<Stylist> {};
+        MySqlConnection conn = DB.Connection();
+        conn.Open();
+        MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+        cmd.CommandText = @"SELECT * FROM stylists;";
+        MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+        while(rdr.Read())
+        {
+            string stylistFirstName = rdr.GetString(0);
+            string stylistLastName = rdr.GetString(1);
+            int stylistId = rdr.GetInt32(2);
+            Stylist newStylist = new Stylist(stylistFirstName, stylistLastName, stylistId);
+            allStylists.Add(newStylist);
+        }
+        conn.Close();
+        if (conn != null)
+        {
+            conn.Dispose();
+        }
+        return allStylists;
+    }
+
+    public void Save()
+    {
+        MySqlConnection conn = DB.Connection();
+        conn.Open();
+        var cmd = conn.CreateCommand() as MySqlCommand;
+        cmd.CommandText = @"INSERT INTO `stylists` (`first_name`, `last_name`) VALUES (@FirstName, @LastName);";
+
+        MySqlParameter firstName = new MySqlParameter();
+        firstName.ParameterName = "@FirstName";
+        firstName.Value = this._firstName;
+
+        MySqlParameter lastName = new MySqlParameter();
+        lastName.ParameterName = "@LastName";
+        lastName.Value = this._lastName;
+
+
+        cmd.Parameters.Add(firstName);
+        cmd.Parameters.Add(lastName);
+
+        cmd.ExecuteNonQuery();
+        _id = (int) cmd.LastInsertedId;
+
+        conn.Close();
+        if (conn != null)
+        {
+            conn.Dispose();
+        }
+    }
+
+    public static void DeleteAll()
+    {
+        MySqlConnection conn = DB.Connection();
+        conn.Open();
+
+        var cmd = conn.CreateCommand() as MySqlCommand;
+        cmd.CommandText = @"DELETE FROM stylists;";
+
+        cmd.ExecuteNonQuery();
+
+        conn.Close();
+        if (conn != null)
+        {
+            conn.Dispose();
+        }
     }
 
     public override bool Equals(System.Object otherStylist)
     {
         if (!(otherStylist is Stylist))
         {
-          return false;
+            return false;
         }
         else
         {
-          Stylist newStylist = (Stylist) otherStylist;
-          bool idEquality = (this.GetId() == newStylist.GetId());
-          bool nameEquality = (this.GetFirstName() == newStylist.GetFirstName());
-          bool lastNameEquality = (this.GetLastName() == newStylist.GetLastName());
-          bool clientEquality = (this.GetClient() == newStylist.GetClient());
-          return (idEquality && nameEquality && lastNameEquality && clientEquality);
+            Stylist newStylist = (Stylist) otherStylist;
+            bool idEquality = (this.GetId() == newStylist.GetId());
+            bool firstNameEquality = (this.GetFirstName() == newStylist.GetFirstName());
+            bool lastNameEquality = (this.GetLastName() == newStylist.GetLastName());
+
+
+            return (idEquality && firstNameEquality && lastNameEquality);
         }
     }
 
-    public override int GetHashCode()
-      {
-           return this.GetFirstName().GetHashCode();
-      }
+    public List<Client> GetClients()
+    {
+        List<Client> allMyClients = new List<Client> {};
+        MySqlConnection conn = DB.Connection();
+        conn.Open();
+        var cmd = conn.CreateCommand() as MySqlCommand;
+        cmd.CommandText = @"SELECT * FROM `clients` WHERE `stylist_id` = @StylistId;";
 
-      public string GetFirstName()
-      {
-        return _firstName;
-      }
+        MySqlParameter stylistId = new MySqlParameter();
+        stylistId.ParameterName = "@StylistId";
+        stylistId.Value = this._id;
+        cmd.Parameters.Add(stylistId);
 
-      public string GetLastName()
-      {
-        return _lastName;
-      }
-
-      public int GetId()
-      {
-        return _id;
-      }
-
-      public int GetClient()
-      {
-        return _client;
-      }
-
-      public void Save()
-         {
-           MySqlConnection conn = DB.Connection();
-           conn.Open();
-
-           var cmd = conn.CreateCommand() as MySqlCommand;
-           cmd.CommandText = @"INSERT INTO `Stylists` (first_name, last_name, client_id) VALUES (@StylistFirstName, @StylistLastName, @StylistClient);";
-
-           MySqlParameter name = new MySqlParameter();
-           name.ParameterName = "@StylistFirstName";
-           name.Value = this._firstName;
-
-
-           MySqlParameter lastName = new MySqlParameter();
-           lastName.ParameterName = "@StylistLastName";
-           lastName.Value = this._lastName;
-
-           MySqlParameter client = new MySqlParameter();
-           client.ParameterName = "@StylistClient";
-           client.Value = this._client;
-
-           cmd.Parameters.Add(name);
-           cmd.Parameters.Add(lastName);
-           cmd.Parameters.Add(client);
-
-           cmd.ExecuteNonQuery();
-           _id = (int) cmd.LastInsertedId;
-
-            conn.Close();
-            if (conn != null)
-            {
-              conn.Dispose();
-            }
-      }
-
-    public static List<Stylist> GetAll()
+        var rdr = cmd.ExecuteReader() as MySqlDataReader;
+        while(rdr.Read())
         {
-            List<Stylist> allStylist = new List<Stylist> {};
-            MySqlConnection conn = DB.Connection();
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"SELECT * FROM Stylists;";
-            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
-            while(rdr.Read())
-            {
-              string StylistName = rdr.GetString(0);
-              string StylistLastName = rdr.GetString(1);
-              int StylistClient = rdr.GetInt32(2);
-              int StylistId = rdr.GetInt32(3);
-              Stylist newStylist = new Stylist(StylistName, StylistLastName, StylistClient, StylistId);
-              allStylist.Add(newStylist);
-            }
-            conn.Close();
-            if (conn != null)
-            {
-                conn.Dispose();
-            }
-            return allStylist;
+            string clientFirstName = rdr.GetString(1);
+            string clientLastName = rdr.GetString(2);
+            string clientPhone = rdr.GetString(3);
+            int clientId = rdr.GetInt32(0);
+            int clientStylistId = rdr.GetInt32(4);
+            Client newClient = new Client(clientFirstName, clientLastName, clientPhone, clientId, clientStylistId);
+            allMyClients.Add(newClient);
         }
-
-        public static Stylist Find(int id)
+        conn.Close();
+        if (conn != null)
         {
-            MySqlConnection conn = DB.Connection();
-            conn.Open();
+          conn.Dispose();
+        }
+        return allMyClients;
+    }
 
-            var cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"SELECT * FROM `Stylists` WHERE id = @thisId;";
+    public static Stylist Find(int id)
+    {
+        MySqlConnection conn = DB.Connection();
+        conn.Open();
 
-            MySqlParameter thisId = new MySqlParameter();
-            thisId.ParameterName = "@thisId";
-            thisId.Value = id;
-            cmd.Parameters.Add(thisId);
+        var cmd = conn.CreateCommand() as MySqlCommand;
+        cmd.CommandText = @"SELECT * from `stylists` WHERE id = @thisId;";
 
-            var rdr = cmd.ExecuteReader() as MySqlDataReader;
+        MySqlParameter thisId = new MySqlParameter();
+        thisId.ParameterName = "@thisId";
+        thisId.Value = id;
+        cmd.Parameters.Add(thisId);
 
-            string stylistFirstName = "";
-            string stylistLastName = "";
-            int stylistClient = 0;
-            int stylistid = 0;
+        string stylistFirstName = "";
+        string stylistLastName = "";
+        int stylistId = 0;
 
-            while (rdr.Read())
-            {
-                stylistFirstName = rdr.GetString(0);
-                stylistLastName = rdr.GetString(1);
-                stylistClient = rdr.GetInt32(2);
-                stylistid = rdr.GetInt32(3);
-            }
 
-            Stylist foundStylist= new Stylist(stylistFirstName, stylistLastName, stylistClient, stylistid);  // This line is new!
-
-             conn.Close();
-             if (conn != null)
-             {
-                 conn.Dispose();
-             }
-
-            return foundStylist;  // This line is new!
+        var rdr = cmd.ExecuteReader() as MySqlDataReader;
+        while (rdr.Read())
+        {
+            stylistFirstName = rdr.GetString(0);
+            stylistLastName = rdr.GetString(1);
+            stylistId = rdr.GetInt32(2);
 
         }
 
-        public static void DeleteAll()
-         {
-             MySqlConnection conn = DB.Connection();
-             conn.Open();
+        Stylist foundStylist = new Stylist(stylistFirstName, stylistLastName, stylistId);
 
-             var cmd = conn.CreateCommand() as MySqlCommand;
-             cmd.CommandText = @"DELETE FROM Stylists;";
-
-             cmd.ExecuteNonQuery();
-
-             conn.Close();
-             if (conn != null)
-             {
-                 conn.Dispose();
-             }
+        conn.Close();
+        if (conn != null)
+        {
+        conn.Dispose();
         }
+
+        return foundStylist;
+    }
   }
 }
